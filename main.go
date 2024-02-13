@@ -1,41 +1,46 @@
 package main
 
 import (
+	"app/server"
 	"fmt"
-	"io"
-	"net"
+	"log"
 	"os"
-	"sync"
+	"reflect"
+	"time"
 )
 
-var wg sync.WaitGroup
-
 func main() {
-	ln, errLn := net.Listen("tcp", ":8989")
-	if errLn != nil {
-		fmt.Println("errLn", errLn)
-		os.Exit(1)
+	var port string = "8989"
+	if len(os.Args) == 2 {
+		port = os.Args[1]
+	} else if len(os.Args) > 2 {
+		return
 	}
-	conn, errConn := ln.Accept()
-	if errConn != nil {
-		fmt.Println("errConn", errConn)
-	}
-	HandlerConnection(conn)
-	wg.Wait()
-}
 
-func HandlerConnection(conn net.Conn) {
-	stdout, _ := io.Copy(os.Stdout, conn)
-	fmt.Println(stdout)
-	buffer := make([]byte, 1024)
-	for {
-		n, err := conn.Read(buffer)
-		if err != nil {
-			fmt.Println("err", err)
-			conn.Close()
-			os.Exit(1)
+	// ip 192.168.100.224 campus tech
+	var listenAddr string = "0.0.0.0:"+port
+	server := serverNC.NewServer(listenAddr)
+	fmt.Println("Server launching on: " + listenAddr)
+
+
+	go func() {
+		file, _ := os.Create("logs.txt")
+		for  msg := range server.Msgch {
+			var newLog string
+			newLog += "["+time.Now().Format(time.DateTime)+"][" + string(msg.From[:len(msg.From)-1]) + "]" + string(msg.Payload)
+			file.WriteString(newLog)
+			for _, client := range server.Clients {
+				if !reflect.DeepEqual(msg.From, client.UserName) {
+					client.Conn.Write([]byte("["+time.Now().Format(time.DateTime)+"]["))
+					client.Conn.Write(msg.From[:len(msg.From)-1])
+					client.Conn.Write([]byte("]:"))
+					client.Conn.Write(msg.Payload)
+					
+				}
+			}
+			// fmt.Printf("received message from connection (%s): %s\n", msg.From, string(msg.Payload))
 		}
-		fmt.Printf("Received %s\n", buffer[:n])
-	}
+	}()
 
+	log.Fatal(server.Start())
 }
