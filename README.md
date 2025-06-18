@@ -37,10 +37,10 @@ ENJOY ;)
 netcat is a project who permit the communications between many clients like a chatbox passing by a server
 - To launch 
 ```
-.\TCPChat port
+./TCPChat port
 ```
 if port is not specified the port 8989 is launched by default
-- If someone want to connect
+- If someone want to connect (You have to be connected on the same network)
 ```
 nc ip port
 ```
