@@ -16,8 +16,8 @@ func layout(g *gocui.Gui) error {
 			return err
 		}
 		fmt.Fprintln(v, "KEYBINDINGS")
-		fmt.Fprintln(v, "← →: Move Client")
-		fmt.Fprintln(v, "↑ ↓: Move Server")
+		fmt.Fprintln(v, "Q D: Move Client")
+		fmt.Fprintln(v, "Z S: Move Server")
 		fmt.Fprintln(v, "^C: Exit")
 	}
 
@@ -78,7 +78,7 @@ func initKeybindings(g *gocui.Gui) error {
 	}
 
 	// ArrowRight | Move on the right view
-	if err := g.SetKeybinding("", gocui.KeyArrowRight, gocui.ModNone,
+	if err := g.SetKeybinding("", 'd', gocui.ModNone,
 		func(g *gocui.Gui, v *gocui.View) error {
 			return nextView(g)
 		}); err != nil {
@@ -86,7 +86,7 @@ func initKeybindings(g *gocui.Gui) error {
 	}
 
 	// ArrowLeft | Move on the left view
-	if err := g.SetKeybinding("", gocui.KeyArrowLeft, gocui.ModNone,
+	if err := g.SetKeybinding("", 'q', gocui.ModNone,
 		func(g *gocui.Gui, v *gocui.View) error {
 			return preView(g)
 		}); err != nil {
@@ -94,7 +94,7 @@ func initKeybindings(g *gocui.Gui) error {
 	}
 
 	// ArrowUp | Move on the next Server
-	if err := g.SetKeybinding("", gocui.KeyArrowUp, gocui.ModNone,
+	if err := g.SetKeybinding("", 'z', gocui.ModNone,
 		func(g *gocui.Gui, v *gocui.View) error {
 			return nextServer(g)
 		}); err != nil {
@@ -102,7 +102,7 @@ func initKeybindings(g *gocui.Gui) error {
 	}
 
 	// ArrowDown | Move on the precedent Server
-	if err := g.SetKeybinding("", gocui.KeyArrowDown, gocui.ModNone,
+	if err := g.SetKeybinding("", 's', gocui.ModNone,
 		func(g *gocui.Gui, v *gocui.View) error {
 			return preServer(g)
 		}); err != nil {
@@ -118,7 +118,7 @@ func initKeybindings(g *gocui.Gui) error {
 	}
 
 	// launch a new Server with the entry user
-	if err := g.SetKeybinding("newServer", gocui.KeyEnter, gocui.ModNone,
+	if err := g.SetKeybinding("newServer", gocui.KeySpace, gocui.ModNone,
 		func(g *gocui.Gui, v *gocui.View) error {
 			return newServer(g)
 		}); err != nil {
