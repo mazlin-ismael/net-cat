@@ -84,6 +84,7 @@ if the connexions reach the server
 ## DOCKER
 
 - To launch the docker In terminal root of project
+- Put TCPChat in dockerNC/newNET-CAT/
 ```
 cd docker
 sh netcat.sh
